@@ -59,7 +59,7 @@ module Capistrano
       end
 
       def line_numbers_in_authorized_keys_remote(pattern)
-        capture("egrep -n \"#{pattern}\" #{authorized_keys_remote_path} | cut -f1 -d:", raise_on_non_zero_exit: false).scan(/\d+/).map(&:to_i)
+        capture("egrep -n \"^#{pattern}$\" #{authorized_keys_remote_path} | cut -f1 -d:", raise_on_non_zero_exit: false).scan(/\d+/).map(&:to_i)
       end
 
       def authorized_keys_remote_valid?
