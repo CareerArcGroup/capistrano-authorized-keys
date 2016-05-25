@@ -7,7 +7,7 @@ module Capistrano
       AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'"
 
       def deploy_user
-        capture(:id, "-un")
+        @deploy_user ||= capture(:id, "-un")
       end
 
       def authorized_keys
