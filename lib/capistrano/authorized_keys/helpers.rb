@@ -3,8 +3,8 @@ module Capistrano
     module Helpers
       HEADER = "# Begin Capistrano-Authorized-Keys generated keys for: %s".freeze
       FOOTER = "# End Capistrano-Authorized-Keys generated keys for: %s".freeze
-      AUTHORIZED_KEYS_DOESNT_EXIST = "missing local authorized keys file: '%s'"
-      AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'"
+      AUTHORIZED_KEYS_DOESNT_EXIST = "missing local authorized keys file: '%s'".freeze
+      AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'".freeze
 
       def deploy_user
         @deploy_user ||= capture(:id, "-un")
@@ -12,6 +12,10 @@ module Capistrano
 
       def authorized_keys
         @authorized_keys ||= File.read(authorized_keys_path)
+      end
+
+      def authorized_keys_exists?
+        File.exists?(authorized_keys_path)
       end
 
       def authorized_keys_header
@@ -26,7 +30,7 @@ module Capistrano
         StringIO.new("#{authorized_keys_header}\n\n#{authorized_keys}\n\n#{authorized_keys_footer}\n")
       end
 
-      def authorized_keys_remote?
+      def authorized_keys_remote_exists?
         test("[ -e #{authorized_keys_remote_path} ]")
       end
 
@@ -39,7 +43,7 @@ module Capistrano
       end
 
       def validate_authorized_keys!
-        raise(AUTHORIZED_KEYS_DOESNT_EXIST % authorized_keys_path) unless File.exists?(authorized_keys_path)
+        raise(AUTHORIZED_KEYS_DOESNT_EXIST % authorized_keys_path) unless authorized_keys_exists?
       end
 
       def validate_authorized_keys_remote!
