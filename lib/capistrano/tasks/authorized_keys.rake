@@ -8,7 +8,10 @@ namespace :authorized_keys do
   desc "Setup remote authorized_keys file"
   task :setup do
     on roles(fetch(:authorized_keys_server_roles)) do
-      execute("echo > #{authorized_keys_remote_path}") unless authorized_keys_remote?
+      unless authorized_keys_remote_exists?
+        execute("touch #{authorized_keys_remote_path}")
+        execute("chmod 600 #{authorized_keys_remote_path}")
+      end
     end
   end
 
