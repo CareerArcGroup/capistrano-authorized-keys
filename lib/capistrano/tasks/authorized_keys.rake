@@ -4,13 +4,6 @@ require "capistrano/authorized_keys/helpers"
 include Capistrano::AuthorizedKeys::Helpers
 include Capistrano::DSL::AuthorizedKeysPaths
 
-namespace :load do
-  task :default do
-    set :authorized_keys_path, "config/authorized_keys"
-    set :authorized_keys_server_roles, [:all]
-  end
-end
-
 namespace :authorized_keys do
   desc "Setup remote authorized_keys file"
   task :setup do
@@ -40,4 +33,12 @@ namespace :authorized_keys do
   end
 
   before :update, :setup
+  before "deploy:updating", "authorized_keys:update"
+end
+
+namespace :load do
+  task :defaults do
+    set :authorized_keys_path, "config/authorized_keys"
+    set :authorized_keys_server_roles, [:all]
+  end
 end
