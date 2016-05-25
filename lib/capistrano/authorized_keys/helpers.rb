@@ -3,8 +3,8 @@ module Capistrano
     module Helpers
       HEADER = "# Begin Capistrano-Authorized-Keys generated keys for: %s".freeze
       FOOTER = "# End Capistrano-Authorized-Keys generated keys for: %s".freeze
-      AUTHORIZED_KEYS_DOESNT_EXIST = "missing local authorized keys file: '%s'"
-      AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'"
+      AUTHORIZED_KEYS_DOESNT_EXIST = "missing local authorized keys file: '%s'".freeze
+      AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'".freeze
 
       def deploy_user
         @deploy_user ||= capture(:id, "-un")
