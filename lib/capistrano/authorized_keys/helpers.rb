@@ -1,10 +1,20 @@
 module Capistrano
   module AuthorizedKeys
+    class InvalidAuthorizedKeysFile < StandardError
+      def initialize(path)
+        super("missing local authorized keys file: #{path}")
+      end
+    end
+
+    class InvalidAuthorizedKeysRemoteFile < StandardError
+      def initialize(path, host)
+        super("invalid remote authorized keys file: '#{path}' on #{host}")
+      end
+    end
+
     module Helpers
       HEADER = "# Begin Capistrano-Authorized-Keys generated keys for: %s".freeze
       FOOTER = "# End Capistrano-Authorized-Keys generated keys for: %s".freeze
-      AUTHORIZED_KEYS_DOESNT_EXIST = "missing local authorized keys file: '%s'".freeze
-      AUTHORIZED_KEYS_REMOTE_INVALID = "invalid remote authorized keys file: '%s'".freeze
 
       def deploy_user
         @deploy_user ||= capture(:id, "-un")
@@ -43,11 +53,11 @@ module Capistrano
       end
 
       def validate_authorized_keys!
-        raise(AUTHORIZED_KEYS_DOESNT_EXIST % authorized_keys_path) unless authorized_keys_exists?
+        raise InvalidAuthorizedKeysFile.new(authorized_keys_path) unless authorized_keys_exists?
       end
 
       def validate_authorized_keys_remote!
-        raise(AUTHORIZED_KEYS_REMOTE_INVALID % authorized_keys_remote_path) unless authorized_keys_remote_valid?
+        raise InvalidAuthorizedKeysRemoteFile.new(authorized_keys_remote_path, host.hostname) unless authorized_keys_remote_valid?
       end
 
       def authorized_keys_remote_header_line_numbers
