@@ -25,7 +25,7 @@ module Capistrano
       end
 
       def authorized_keys_exists?
-        File.exists?(authorized_keys_path)
+        File.exist?(authorized_keys_path)
       end
 
       def authorized_keys_header
